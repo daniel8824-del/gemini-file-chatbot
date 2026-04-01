@@ -1,2 +1,4 @@
 node_modules\ndist\n.env*
 .vercel
+.env*.local
+.env.production
