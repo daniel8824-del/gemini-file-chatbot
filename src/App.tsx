@@ -597,7 +597,7 @@ export default function App() {
                     : 'bg-white border border-gray-100/50 text-gray-800 rounded-3xl rounded-tl-sm shadow-[0_2px_10px_rgb(0,0,0,0.02)]'
                 )}>
                   
-                  <div className={cn('prose prose-sm max-w-none break-words leading-relaxed', message.role === 'user' ? 'prose-invert' : '')}>
+                  <div className={cn('prose prose-sm max-w-none break-words leading-relaxed dark:prose-invert prose-headings:font-bold prose-strong:font-bold prose-li:my-0.5 prose-table:text-sm', message.role === 'user' ? 'prose-invert' : '')}>
                     {message.role === 'model' && message.text === '' && isLoading ? (
                       <div className="flex items-center gap-3 text-gray-500 py-1">
                         <div className="flex gap-1.5 items-center h-5">
