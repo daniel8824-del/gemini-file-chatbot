@@ -111,7 +111,7 @@ export default function App() {
   const [input, setInput] = useState('');
   const [chatAttachments, setChatAttachments] = useState<File[]>([]);
   
-  const [storeName, setStoreName] = useState<string | null>('fileSearchStores/z1arv6fx1xtt-2dnc9uq3hgov');
+  const [storeName, setStoreName] = useState<string | null>('fileSearchStores/v2-bydr3us66oqo');
   const [storeFiles, setStoreFiles] = useState<StoreFile[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -486,7 +486,7 @@ export default function App() {
       }
 
       const response = await ai.models.generateContent({
-        model: 'gemini-3.1-flash-preview',
+        model: 'gemini-2.5-flash',
         contents: contents,
         config: Object.keys(config).length > 0 ? config : undefined,
       });
