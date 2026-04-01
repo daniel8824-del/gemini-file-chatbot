@@ -276,7 +276,7 @@ export default function App() {
     addLog(`Store 삭제 중: ${storeNameToDelete}`);
     try {
       const ai = new GoogleGenAI({ apiKey: getApiKey() });
-      await ai.fileSearchStores.delete({ name: storeNameToDelete });
+      await ai.fileSearchStores.delete({ name: storeNameToDelete, config: { force: true } });
       addLog(`✅ Store 삭제 성공: ${storeNameToDelete}`);
       showToast('스토어가 삭제되었습니다.');
       if (storeName === storeNameToDelete) {
