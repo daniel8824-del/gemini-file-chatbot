@@ -485,34 +485,26 @@ export default function App() {
         config.tools = [{ fileSearch: { fileSearchStoreNames: [storeName] } }];
       }
 
-      const responseStream = await ai.models.generateContentStream({
+      const response = await ai.models.generateContent({
         model: 'gemini-3.1-flash-preview',
         contents: contents,
         config: Object.keys(config).length > 0 ? config : undefined,
       });
 
-      let fullResponse = '';
+      let fullResponse = response.text || '';
       let citations: any[] = [];
-      
-      for await (const chunk of responseStream) {
-        fullResponse += chunk.text;
-        
-        let currentText = fullResponse;
-        let currentCitations = citations;
 
-        if (chunk.candidates?.[0]?.groundingMetadata) {
-           const processed = processCitations(fullResponse, chunk.candidates[0].groundingMetadata);
-           currentText = processed.text;
-           currentCitations = processed.citations;
-           citations = currentCitations;
-        }
-        
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg.id === modelMessageId ? { ...msg, text: currentText, citations: currentCitations.length > 0 ? currentCitations : msg.citations } : msg
-          )
-        );
+      if (response.candidates?.[0]?.groundingMetadata) {
+        const processed = processCitations(fullResponse, response.candidates[0].groundingMetadata);
+        fullResponse = processed.text;
+        citations = processed.citations;
       }
+
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === modelMessageId ? { ...msg, text: fullResponse, citations: citations.length > 0 ? citations : msg.citations } : msg
+        )
+      );
     } catch (error: any) {
       console.error('Error generating response:', error);
       setMessages((prev) => [
