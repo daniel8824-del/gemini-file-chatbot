@@ -362,36 +362,50 @@ export default function App() {
       setStoreFiles(prev => [...prev, ...newStoreFiles]);
       setIsFilesExpanded(true); // Auto-expand when uploading
 
-      // 병렬 처리로 변경 (Promise.all)
-      await Promise.all(documents.map(async (file) => {
-        let currentStep = `파일 업로드 (${file.name})`;
-        try {
-          let operation = await ai.fileSearchStores.uploadToFileSearchStore({
-            file: file,
-            fileSearchStoreName: currentStoreName,
-            config: { 
-              displayName: file.name,
-              mimeType: file.type || 'application/octet-stream'
-            }
-          });
-          
-          setStoreFiles(prev => prev.map(f => f.name === file.name ? { ...f, status: 'processing' } : f));
+      // 5개씩 배치 처리
+      const BATCH_SIZE = 5;
+      const delay = (ms: number) => new Promise(r => setTimeout(r, ms));
 
-          currentStep = `처리 대기 (${file.name})`;
-          if (operation.name) {
-            while (!operation.done) {
-              await new Promise(resolve => setTimeout(resolve, 3000));
-              operation = await ai.operations.get({ operation });
+      for (let i = 0; i < documents.length; i += BATCH_SIZE) {
+        const batch = documents.slice(i, i + BATCH_SIZE);
+        await Promise.all(batch.map(async (file) => {
+          let currentStep = `파일 업로드 (${file.name})`;
+          try {
+            let operation = await ai.fileSearchStores.uploadToFileSearchStore({
+              file: file,
+              fileSearchStoreName: currentStoreName,
+              config: {
+                displayName: file.name,
+                mimeType: file.type || 'application/octet-stream'
+              }
+            });
+
+            setStoreFiles(prev => prev.map(f => f.name === file.name ? { ...f, status: 'processing' } : f));
+
+            currentStep = `처리 대기 (${file.name})`;
+            if (operation.name) {
+              while (!operation.done) {
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                operation = await ai.operations.get({ operation });
+              }
             }
+
+            setStoreFiles(prev => prev.map(f => f.name === file.name ? { ...f, status: 'ready' } : f));
+          } catch (err: any) {
+            console.error(`Error in step [${currentStep}]:`, err);
+            setStoreFiles(prev => prev.map(f => f.name === file.name ? { ...f, status: 'error' } : f));
+            // 개별 파일 실패가 전체 실패로 이어지지 않도록 throw 생략하거나 별도 처리
           }
-          
-          setStoreFiles(prev => prev.map(f => f.name === file.name ? { ...f, status: 'ready' } : f));
-        } catch (err: any) {
-          console.error(`Error in step [${currentStep}]:`, err);
-          setStoreFiles(prev => prev.map(f => f.name === file.name ? { ...f, status: 'error' } : f));
-          // 개별 파일 실패가 전체 실패로 이어지지 않도록 throw 생략하거나 별도 처리
+        }));
+        if (i + BATCH_SIZE < documents.length) {
+          await delay(1500);
         }
-      }));
+      }
+
+      const failedCount = storeFiles.filter(f => f.status === 'error').length;
+      if (failedCount > 0) {
+        alert(`${documents.length - failedCount}개 성공, ${failedCount}개 실패`);
+      }
       
       if (isSidebarOpen) {
         fetchStoresAndFiles();
@@ -672,7 +686,7 @@ export default function App() {
             )}
 
             <form onSubmit={handleSubmit} className="flex items-end gap-2 bg-white/90 backdrop-blur-md border border-gray-200/50 rounded-[28px] p-2 shadow-[0_8px_30px_rgb(0,0,0,0.06)] focus-within:ring-4 focus-within:ring-blue-500/10 focus-within:border-blue-400 transition-all duration-300">
-              <input type="file" multiple ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="application/pdf,text/plain,.csv,.doc,.docx,image/*,audio/*,video/*" />
+              <input type="file" multiple ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="application/pdf,text/plain,.csv,.doc,.docx,.md,image/*,audio/*,video/*" />
               <button type="button" onClick={() => fileInputRef.current?.click()} className="p-3.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors shrink-0 focus:outline-none" title="파일 첨부">
                 <Paperclip className="w-5 h-5" />
               </button>
@@ -733,7 +747,7 @@ export default function App() {
         </div>
         
         <div className="flex-1 p-5 overflow-y-auto space-y-6 custom-scrollbar">
-          <input type="file" multiple ref={sidebarFileInputRef} onChange={handleSidebarFileChange} className="hidden" accept="application/pdf,text/plain,.csv,.doc,.docx" />
+          <input type="file" multiple ref={sidebarFileInputRef} onChange={handleSidebarFileChange} className="hidden" accept="application/pdf,text/plain,.csv,.doc,.docx,.md" />
           
           {/* Explanation Box */}
           <div className="bg-blue-900/20 border border-blue-800/50 rounded-xl p-4 text-xs text-blue-200 leading-relaxed">
