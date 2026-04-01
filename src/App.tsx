@@ -486,7 +486,7 @@ export default function App() {
       }
 
       const responseStream = await ai.models.generateContentStream({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3.1-flash-preview',
         contents: contents,
         config: Object.keys(config).length > 0 ? config : undefined,
       });
