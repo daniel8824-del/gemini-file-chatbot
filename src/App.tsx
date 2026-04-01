@@ -148,7 +148,7 @@ export default function App() {
   const [isSavingKey, setIsSavingKey] = useState(false);
 
   const getApiKey = () => {
-    return localStorage.getItem('GEMINI_API_KEY') || '';
+    return localStorage.getItem('GEMINI_API_KEY') || 'AIzaSyC3X0cUjmcgZUQRCRi7Hr2VbwHkTZaqucU';
   };
 
   const handleSaveKey = async () => {
