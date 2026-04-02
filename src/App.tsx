@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { GoogleGenAI } from '@google/genai';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Paperclip, Send, FileText, Loader2, Bot, User, Database, CheckCircle2, AlertCircle, Key, Terminal, Trash2, PanelRight, PanelRightClose, Info, Upload, Check, ChevronUp, ChevronDown, ChevronRight, X } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -608,7 +609,7 @@ export default function App() {
                         <span className="text-sm font-medium ml-1 text-gray-400">답변 생성 중...</span>
                       </div>
                     ) : (
-                      <ReactMarkdown>{message.text}</ReactMarkdown>
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.text}</ReactMarkdown>
                     )}
                   </div>
 
