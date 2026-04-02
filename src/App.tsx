@@ -149,7 +149,7 @@ export default function App() {
   const [isSavingKey, setIsSavingKey] = useState(false);
 
   const getApiKey = () => {
-    return localStorage.getItem('GEMINI_API_KEY') || (import.meta.env.VITE_GEMINI_API_KEY || '');
+    return localStorage.getItem('GEMINI_API_KEY') || '';
   };
 
   const handleSaveKey = async () => {
