@@ -592,7 +592,7 @@ export default function App() {
                   {message.role === 'user' ? <User className="w-5 h-5 text-gray-500" /> : <Bot className="w-5 h-5" />}
                 </div>
                 <div className={cn(
-                  'max-w-[95%] px-6 py-4 shadow-sm transition-all',
+                  'px-6 py-4 shadow-sm transition-all',
                   message.role === 'user' 
                     ? 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white rounded-3xl rounded-tr-sm shadow-md' 
                     : 'bg-white border border-gray-100/50 text-gray-800 rounded-3xl rounded-tl-sm shadow-[0_2px_10px_rgb(0,0,0,0.02)]'
