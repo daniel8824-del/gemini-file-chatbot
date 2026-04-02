@@ -112,7 +112,7 @@ export default function App() {
   const [input, setInput] = useState('');
   const [chatAttachments, setChatAttachments] = useState<File[]>([]);
   
-  const [storeName, setStoreName] = useState<string | null>('fileSearchStores/v2-bydr3us66oqo');
+  const [storeName, setStoreName] = useState<string | null>('fileSearchStores/4pzba7n1eiiy-h1vacij7t29j');
   const [storeFiles, setStoreFiles] = useState<StoreFile[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
