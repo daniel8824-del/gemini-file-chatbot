@@ -585,14 +585,14 @@ export default function App() {
         </header>
 
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 scroll-smooth">
-          <div className="max-w-3xl mx-auto space-y-8 pb-4">
+          <div className="max-w-5xl mx-auto space-y-8 pb-4">
             {messages.map((message) => (
               <div key={message.id} className={cn('flex gap-4', message.role === 'user' ? 'flex-row-reverse' : 'flex-row')}>
                 <div className={cn('w-9 h-9 rounded-full flex items-center justify-center shrink-0 mt-1 shadow-sm', message.role === 'user' ? 'bg-gray-100 border border-gray-200' : 'bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 text-blue-600')}>
                   {message.role === 'user' ? <User className="w-5 h-5 text-gray-500" /> : <Bot className="w-5 h-5" />}
                 </div>
                 <div className={cn(
-                  'max-w-[85%] px-6 py-4 shadow-sm transition-all',
+                  'max-w-[95%] px-6 py-4 shadow-sm transition-all',
                   message.role === 'user' 
                     ? 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white rounded-3xl rounded-tr-sm shadow-md' 
                     : 'bg-white border border-gray-100/50 text-gray-800 rounded-3xl rounded-tl-sm shadow-[0_2px_10px_rgb(0,0,0,0.02)]'
@@ -646,7 +646,7 @@ export default function App() {
         </main>
 
         <div className="bg-gradient-to-t from-[#F9FAFB] via-[#F9FAFB] to-transparent pt-6 pb-6 px-4">
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             {/* Active Store & Upload Progress */}
             {(storeName || chatAttachments.length > 0) && (
               <div className="mb-3 flex flex-wrap items-center gap-2 px-2">
