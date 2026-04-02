@@ -486,6 +486,17 @@ export default function App() {
         config.tools = [{ fileSearch: { fileSearchStoreNames: [storeName] } }];
       }
 
+      config.systemInstruction = `당신은 경복대학교 입학상담 AI입니다. 업로드된 데이터 기반으로 정확하게 답변하세요.
+
+답변 형식 규칙:
+- 마크다운 형식으로 답변 (제목, 볼드, 리스트, 표 활용)
+- 표는 반드시 | 구분자 + 헤더 구분선 사용
+- 수치는 **볼드**로 강조
+- 항목이 3개 이상이면 표로 정리
+- 마지막에 "📞 입학처: 031-570-9540" 안내
+- 이모지 적절히 사용
+- 간결하고 친절한 톤`;
+
       const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
         contents: contents,
